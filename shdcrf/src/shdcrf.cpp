@@ -288,7 +288,7 @@ void ShdCrf::_update(lattice_t& l, instance_t& ins, double z)
       // p(h_t|y^i,x) = Sigma_{h_t-1}p(h_t-1,h_t|y^i,x)
       // p(h_t-1,h_t|x) = Sigma_{y_t-1,y_t} p(h_t-1,h_t,y_t-1,y_t|x)
       // p(h_t|x) = Sigma_{h_t-1,y_t-1,y_t} p(h_t-1,h_t,y_t-1,y_t|x)
-      // p(h_t|x)p(h_t,y_t) = p(h_t,y_t|x)
+      // p(h_t|x)p(h_t,y_t) => p(h_t|x)p(h_t,y_t|x)
       // p(y|h) = p(y|x)/p(h|x)
 
       vector< vector< vector<double> > > phhy(this->hiddens); // p(h_t-1,h_t,y_t|x)
