@@ -127,7 +127,7 @@ int getparams(int argc, char **argv)
       };
       /* getopt_long stores the option index here. */
       int option_index = 0;
-      c = getopt_long(argc, argv, "c:s:p:t:m:e:a:i:", long_options, & option_index);
+      c = getopt_long(argc, argv, "c:s:p:t:m:e:a:i:", long_options, &option_index);
       /* Detect the end of the options. */
       if (c == -1)
       {
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
    }
    else if (algorithm == "boosting")
    {
-      learner.bagging(epoch, iter);
+      learner.boosting(epoch, iter);
    }
    else
    {

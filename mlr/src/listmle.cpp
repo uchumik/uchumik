@@ -5,7 +5,7 @@ using namespace std;
 using namespace mlr;
 
 ListMLELearner::ListMLELearner(ranklist& corpus)
-: topk(10)
+: topk(5)
 {
    this->fsize = this->initmodel(corpus);
 }
@@ -134,7 +134,7 @@ void ListMLELearner::update(double eta, ilist& i, double cnf, const _cache& c)
       iliterator oit = ++it;
       for (int j = k+1; oit != i.end(); ++oit, ++j)
       {
-         double p = - myexp(x[j] - partition);
+         double p = myexp(x[j] - partition);
          const _fvector& ffv = (*oit)->getvect();
          _fiterator ffit = ffv.begin();
          for (; ffit != ffv.end(); ++ffit)

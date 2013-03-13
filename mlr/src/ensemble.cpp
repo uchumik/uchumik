@@ -146,6 +146,7 @@ void EnsembleLearner::bagging(unsigned int size, unsigned int iter)
 
 void EnsembleLearner::boosting(unsigned int size, unsigned int iter)
 {
+   cout << "boosting start" << endl;
    clist cl(this->denominator);
    rliterator it = this->corpus.begin();
    for (int i = 0; it != this->corpus.end(); ++it, ++i)

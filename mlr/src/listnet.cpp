@@ -133,7 +133,7 @@ void ListNetLearner::update(double eta, ilist &i, double cnf, const _cache& c)
    // other
    for (; it != i.end(); ++it)
    {
-      double p = -myexp(x[id++] - z);
+      double p = myexp(x[id++] - z);
       const _fvector& ffv = (*it)->getvect();
       _fiterator ffit = ffv.begin();
       for (; ffit != ffv.end(); ++ffit)
@@ -141,7 +141,7 @@ void ListNetLearner::update(double eta, ilist &i, double cnf, const _cache& c)
          unsigned int key = (*ffit).key;
          _feature f;
          f.key = key;
-         f.val = p * (*ffit).val;
+         f.val = -p * (*ffit).val;
          int id = findkey(key, grad);
          if (id < 0)
          {
