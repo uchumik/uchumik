@@ -199,5 +199,7 @@ int main(int argc, char **argv)
       cerr << "non-option algorithm-type: " << algorithm << endl;
       usage(argc, argv);
    }
+
+   learner.savemodel(model.c_str());
    return 0;
 }

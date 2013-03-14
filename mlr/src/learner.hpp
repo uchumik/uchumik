@@ -59,7 +59,7 @@ class Learner
       virtual void test(ranklist& corpus, const clist& c = clist()) = 0;
       /**
        * setter of penalty
-       @param penalty :penalty weight for L2 regularization
+       * @param penalty :penalty weight for L2 regularization
        */
       virtual void setpenalty(double penalty)
       {
@@ -69,12 +69,27 @@ class Learner
          }
          this->c = penalty;
       }
+      /**
+       * get model parameters
+       */
+       virtual const double* getmodel() const
+       {
+          return this->model;
+       }
+       /**
+        * get feature size
+        */
+      virtual const long getfsize() const
+      {
+         return this->fsize;
+      }
    protected:
       double *model;
       double *pcache;
 
       double c;
       double cc;
+      long fsize;
    private:
       Learner(const Learner&);
       Learner& operator=(const Learner&);

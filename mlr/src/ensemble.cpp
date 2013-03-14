@@ -142,6 +142,7 @@ void EnsembleLearner::bagging(unsigned int size, unsigned int iter)
       this->learners.push_back( this->factory(subset) );
       this->updater(iter, *(this->learners[i]), subset);
    }
+   this->etype = TypeBagging;
 }
 
 void EnsembleLearner::boosting(unsigned int size, unsigned int iter)
@@ -161,4 +162,54 @@ void EnsembleLearner::boosting(unsigned int size, unsigned int iter)
       this->updater(iter, *(this->learners[i]), this->corpus, cnf, cl);
       (this->learners[i])->cache(this->corpus, cnf, &cl);
    }
+   this->etype = TypeBoosting;
+}
+
+void EnsembleLearner::savelinearmodel(FILE *fp)
+{
+   long fsize = this->learners[0]->getfsize();
+   int lsize = this->learners.size();
+   double params[fsize];
+   for (long j = 0; j < fsize; ++j)
+   {
+      params[j] = 0;
+   }
+   Learners::iterator it = this->learners.begin();
+   for (int t = 0; it != this->learners.end(); ++it, ++t)
+   {
+      double cnf = (double)lsize/(lsize+t+1);
+      const double *w = (*it)->getmodel();
+      for (int i = 0; i < fsize; ++i)
+      {
+         params[i] += (this->etype == TypeBagging)? w[i]: cnf * w[i];
+      }
+   }
+   fwrite(&fsize, sizeof(long), 1, fp);
+   fwrite(params, sizeof(double), fsize, fp);
+}
+
+void EnsembleLearner::savemodel(const char *model)
+{
+   if (!model)
+   {
+      return;
+   }
+   FILE *fp = NULL;
+   if ((fp = fopen(model, "wb")) == NULL)
+   {
+      return;
+   }
+   switch (this->type)
+   {
+      case TypeListNet:
+         this->savelinearmodel(fp);
+         break;
+      case TypeListMLE:
+         this->savelinearmodel(fp);
+         break;
+      default:
+         throw "Unknown Learner Type";
+         break;
+   }
+   fclose(fp);
 }

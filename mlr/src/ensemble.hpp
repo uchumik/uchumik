@@ -22,6 +22,12 @@ namespace mlr
       TypeLambdaNeuroListMLE = 7
    };
 
+   enum EnsembleType
+   {
+      TypeBagging = 0,
+      TypeBoosting = 1
+   };
+
    class EnsembleLearner
    {
       public:
@@ -53,6 +59,7 @@ namespace mlr
          double samplesize;
          double penalty;
          LearnerType type;
+         EnsembleType etype;
 
          ranklist corpus;
          Learners learners;
@@ -62,6 +69,8 @@ namespace mlr
          Learner* factory(ranklist& corpus);
          void updater(unsigned int iter, Learner& learner, ranklist& corpus, double cnf = 0, const clist& clist = clist());
          double decay(int t, unsigned int size);
+         void savelinearmodel(FILE *fp);
+         void savenonlinearmodel(FILE *fp);
       private:
          EnsembleLearner(){};
          EnsembleLearner(const EnsembleLearner&);

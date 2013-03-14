@@ -14,6 +14,7 @@ namespace mlr
          virtual void predict(const ilist& instance, const double cnf, const _cache& c) const = 0;
       protected:
          double *model;
+         long fsize;
       private:
          Ranker(const Ranker&);
          Ranker& operator=(const Ranker&);

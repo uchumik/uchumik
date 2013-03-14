@@ -27,7 +27,6 @@ namespace mlr
          void cache(ranklist& corpus, double cnf, clist *c = NULL);
       protected:
          ListNetLearner(){}
-         long fsize;
          long initmodel(ranklist& corpus);
          //double crossent(ranklist& corpus, clist *c);
          double crossent(ranklist& corpus, const clist& c);
@@ -44,7 +43,6 @@ namespace mlr
          ~ListNetRanker();
          void predict(ngilist& instance, const double cnf = 0, _cache *c = NULL);
       protected:
-         long fsize;
          void readmodel(const char *modelfile);
          double product(double *model, const _fvector& fv);
       private:
