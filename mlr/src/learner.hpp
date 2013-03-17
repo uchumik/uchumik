@@ -167,6 +167,45 @@ static bool IsChangeQuery(long prev, long cur)
    return (prev != cur);
 }
 
+static void ilread(std::ifstream& in, ngilist& l)
+{
+   if (in.eof())
+   {
+      return;
+   }
+   // init
+   docline line;
+   std::getline(in,line);
+   instance *i = new instance;
+   i->set(line);
+   l.push_back(i);
+
+   // current position
+   std::streampos pos = in.tellg();
+   long prev = i->getqid();
+   long cur = prev;
+   long rank = 0;
+   while (!in.eof())
+   {
+      docline line;
+      std::getline(in, line);
+      instance *i = new instance;
+      i->set(line);
+      i->setposition(rank++);
+      cur = i->getqid();
+      if ( IsChangeQuery(prev, cur) )
+      {
+         // return to saved position
+         in.seekg(pos, std::ios_base::beg);
+         break;
+      }
+      l.push_back(i);
+      // save current position
+      pos = in.tellg();
+      prev = cur;
+   }
+}
+
 static void ilread(std::ifstream& in, ilist& l)
 {
    if (in.eof())
@@ -184,12 +223,14 @@ static void ilread(std::ifstream& in, ilist& l)
    std::streampos pos = in.tellg();
    long prev = i->getqid();
    long cur = prev;
+   long rank = 0;
    while (!in.eof())
    {
       docline line;
       std::getline(in, line);
       instance *i = new instance;
       i->set(line);
+      i->setposition(rank++);
       cur = i->getqid();
       if ( IsChangeQuery(prev, cur) )
       {
@@ -207,6 +248,15 @@ static void ilread(std::ifstream& in, ilist& l)
 static void ildelete(ilist& l)
 {
    iliterator it = l.begin();
+   for (; it != l.end(); ++it)
+   {
+      delete *it;
+   }
+}
+
+static void ildelete(ngilist& l)
+{
+   ngiliterator it = l.begin();
    for (; it != l.end(); ++it)
    {
       delete *it;

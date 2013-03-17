@@ -3,6 +3,7 @@
 
 # include "instance.hpp"
 # include "learner.hpp"
+# include <cstdio>
 
 namespace mlr
 {
@@ -10,8 +11,12 @@ namespace mlr
    {
       public:
          Ranker():model(NULL){}
+         Ranker(const double *w, long fsize)
+         {
+            std::memcpy(this->model, w, sizeof(double)*fsize);
+         };
          virtual ~Ranker(){}
-         virtual void predict(const ilist& instance, const double cnf, const _cache& c) const = 0;
+         virtual void predict(ngilist& instance, const double cnf = 0, _cache* c = NULL) = 0;
       protected:
          double *model;
          long fsize;

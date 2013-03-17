@@ -14,6 +14,7 @@ class UnitInstanceTest : public CPPUNIT_NS::TestFixture
    CPPUNIT_TEST( testdocidcheck );
    CPPUNIT_TEST( testvectorcheck );
    CPPUNIT_TEST( testpredict );
+   CPPUNIT_TEST( testposition );
    // Test End
    CPPUNIT_TEST_SUITE_END();
 
@@ -30,6 +31,7 @@ class UnitInstanceTest : public CPPUNIT_NS::TestFixture
       void testdocidcheck();
       void testvectorcheck();
       void testpredict();
+      void testposition();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION( UnitInstanceTest );
@@ -90,4 +92,11 @@ void UnitInstanceTest::testpredict()
    double predict = 1.0;
    this->testInstance->setpredict(predict);
    CPPUNIT_ASSERT_EQUAL(predict, this->testInstance->getpredict());
+}
+
+void UnitInstanceTest::testposition()
+{
+   long position = 1;
+   this->testInstance->setposition(position);
+   CPPUNIT_ASSERT_EQUAL(position, this->testInstance->getposition());
 }

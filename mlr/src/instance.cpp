@@ -8,7 +8,7 @@ using namespace mlr;
 using namespace std;
 
 instance::instance()
-: qid(-1), docid(-1), label(0), predict(0)
+: qid(-1), docid(-1), position(-1), label(0), predict(0)
 {
 }
 
@@ -71,6 +71,15 @@ void instance::setpredict(double predict)
       throw "predicted label must be more than 0";
    }
    this->predict = predict;
+}
+
+void instance::setposition(long position)
+{
+   if (position < 0)
+   {
+      throw "ranking position must be more than 0";
+   }
+   this->position = position;
 }
 
 void instance::setfeature(docline& doc, int s, int l)
@@ -137,4 +146,9 @@ long instance::getqid() const
 long instance::getdocid() const
 {
    return this->docid;
+}
+
+long instance::getposition() const
+{
+   return this->position;
 }

@@ -81,10 +81,16 @@ namespace mlr
    {
       public:
          EnsembleRanker(const char *model);
+         virtual ~EnsembleRanker();
+         virtual void predict(ngilist& instance);
       protected:
-         Rankers ranker;
+         Rankers rankers;
+         LearnerType type;
+         EnsembleType etype;
+
+         Ranker* factory(double *w, long fsize);
       private:
-         EnsembleRanker();
+         EnsembleRanker(){};
          EnsembleRanker(const EnsembleRanker&);
          EnsembleRanker& operator=(const EnsembleRanker&);
    };

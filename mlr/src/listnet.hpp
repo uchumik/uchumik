@@ -6,6 +6,14 @@
 
 namespace mlr
 {
+   class pcomp
+   {
+      public:
+         bool operator()(const instance *a, const instance* b)
+         {
+            return (a->getpredict() > b->getpredict());
+         }
+   };
    class lcomp
    {
       public:
@@ -40,6 +48,7 @@ namespace mlr
    {
       public:
          ListNetRanker(const char *modelfile);
+         ListNetRanker(const double *model, long fsize):Ranker(model, fsize){};
          ~ListNetRanker();
          void predict(ngilist& instance, const double cnf = 0, _cache *c = NULL);
       protected:

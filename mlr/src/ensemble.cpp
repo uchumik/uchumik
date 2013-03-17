@@ -184,7 +184,13 @@ void EnsembleLearner::savelinearmodel(FILE *fp)
          params[i] += (this->etype == TypeBagging)? w[i]: cnf * w[i];
       }
    }
+   // learner size and fsize
+   fwrite(&lsize, sizeof(int), 1, fp);
    fwrite(&fsize, sizeof(long), 1, fp);
+   // learner type
+   fwrite(&this->type, sizeof(LearnerType), 1, fp);
+   // ensemble type
+   fwrite(&this->etype, sizeof(EnsembleType), 1, fp);
    fwrite(params, sizeof(double), fsize, fp);
 }
 
@@ -212,4 +218,71 @@ void EnsembleLearner::savemodel(const char *model)
          break;
    }
    fclose(fp);
+}
+
+EnsembleRanker::EnsembleRanker(const char *model)
+{
+   FILE *fp = NULL;
+   if ((fp = fopen(model, "rb")) == NULL)
+   {
+      throw "Couldn't open modelfile";
+   }
+   int lsize = 0;
+   long fsize = 0;
+   fread(&lsize, sizeof(int), 1, fp);
+   fread(&fsize, sizeof(long), 1, fp);
+   fread(&this->type, sizeof(LearnerType), 1, fp);
+   fread(&this->etype, sizeof(EnsembleType), 1, fp);
+   for (int i = 0; i < lsize; ++i)
+   {
+      double w[fsize];
+      fread(w, sizeof(double), fsize, fp);
+      Ranker *ranker = this->factory(w, fsize);
+      this->rankers.push_back(ranker);
+   }
+   fclose(fp);
+}
+
+EnsembleRanker::~EnsembleRanker()
+{
+   Rankers::iterator it = rankers.begin();
+   for (; it != rankers.end(); ++it)
+   {
+      delete *it;
+   }
+}
+
+Ranker* EnsembleRanker::factory(double *w, long fsize)
+{
+   switch (this->type)
+   {
+      case TypeListNet:
+         return new ListNetRanker(w, fsize);
+         break;
+      case TypeListMLE:
+         return new ListNetRanker(w, fsize);
+         break;
+      default:
+         throw "Unknown Learner Type";
+         break;
+   }
+}
+
+void EnsembleRanker::predict(ngilist& instance)
+{
+   Rankers::iterator it = rankers.begin();
+   _cache c;
+   int size = this->rankers.size();
+   for (int i = 0; it != rankers.end(); ++it, ++i)
+   {
+      double cnf = (double)size/(size + i + 1);
+      if (this->etype == TypeBagging)
+      {
+         (*it)->predict(instance);
+      }
+      else
+      {
+         (*it)->predict(instance, cnf, &c);
+      }
+   }
 }

@@ -42,6 +42,7 @@ class instance
       virtual double getpredict() const;
       virtual long getqid() const;
       virtual long getdocid() const;
+      virtual long getposition() const;
       /**
        * @param docline& line :LETOR format string
        */
@@ -50,9 +51,14 @@ class instance
        * @param double predict :predicted label
        */
       virtual void setpredict(double predict);
+      /**
+       * @param long position :ranking position
+       */
+      virtual void setposition(long position);
    protected:
       long qid;
       long docid;
+      long position;
       double label;
       double predict;
       _fvector fv;
